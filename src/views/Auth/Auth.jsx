@@ -1,5 +1,6 @@
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useState } from 'react/cjs/react.production.min';
 import UserForm from '../../components/UserForm/UserForm';
 import { useUser } from '../../context/UserContext';
 import { signInUser, signUpUser } from '../../services/users';
@@ -8,19 +9,27 @@ import styles from './Auth.css';
 
 export default function Auth({ isSigningUp = false }) {
   const history = useHistory();
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
+  
 
   const handleSubmit = async (email, password) => {
+    const id = user.id    
     try {
-      // TODO: Implement sign up & sign
-      // Use isSigningUp to determine whether to sign up or sign in a user
-      // If signing in: set the user ({id, email}) and redirect to /notes
-      // If signing up: redirect to /confirm-email
-      // Use the corresponding functions from `/services/users` for both cases
+      if(isSigningUp) {
+        signUpUser(email, password);
+        history.replace('/confirm-email');
+      } else {
+        const user = await signInUser(email, password);
+        setUser({id: user.id, email});
+        history.push('/notes');
+      }
     } catch (error) {
       throw error;
     }
   };
+  console.log('USER', user);
+  // user.id ? history.replace('/notes') : {}
+  
 
   return (
     <section className={styles.authForm}>
