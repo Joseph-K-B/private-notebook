@@ -1,6 +1,5 @@
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useState } from 'react/cjs/react.production.min';
 import UserForm from '../../components/UserForm/UserForm';
 import { useUser } from '../../context/UserContext';
 import { signInUser, signUpUser } from '../../services/users';
@@ -12,8 +11,7 @@ export default function Auth({ isSigningUp = false }) {
   const { user, setUser } = useUser();
   
 
-  const handleSubmit = async (email, password) => {
-    const id = user.id    
+  const handleSubmit = async (email, password) => {   
     try {
       if(isSigningUp) {
         signUpUser(email, password);
@@ -27,8 +25,6 @@ export default function Auth({ isSigningUp = false }) {
       throw error;
     }
   };
-  console.log('USER', user);
-  // user.id ? history.replace('/notes') : {}
   
 
   return (
